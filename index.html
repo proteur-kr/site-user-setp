@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+  <meta
+    name="color-scheme"
+    content="light"
+  >
+  <title>현장 통합관리 시스템 계정 설정</title>
+
+  <style>
+    :root {
+      --navy:#0A2973;
+      --navy-dark:#071F57;
+      --green:#00925E;
+      --text:#172033;
+      --muted:#687386;
+      --border:#D7E0EA;
+      --background:#F3F6FA;
+      --error-bg:#FCEFED;
+      --error-text:#B43228;
+      --success-bg:#EDF7F2;
+      --success-text:#087A50;
+      --notice-bg:#EEF3FB;
+      --notice-text:#29446F;
+    }
+
+    * {
+      box-sizing:border-box;
+    }
+
+    html,
+    body {
+      min-height:100%;
+    }
+
+    body {
+      margin:0;
+      background:var(--background);
+      font-family:
+        "Malgun Gothic",
+        "Noto Sans KR",
+        Arial,
+        sans-serif;
+      color:var(--text);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+
+    .card {
+      width:min(540px, 100%);
+      overflow:hidden;
+      background:#FFFFFF;
+      border:1px solid var(--border);
+      border-radius:19px;
+      box-shadow:
+        0 18px 50px rgba(21,37,68,.16);
+    }
+
+    .header {
+      padding:28px 31px 23px;
+      color:#FFFFFF;
+      background:var(--navy);
+    }
+
+    .header h1 {
+      margin:0 0 9px;
+      font-size:23px;
+      line-height:1.35;
+    }
+
+    .header p {
+      margin:0;
+      font-size:13px;
+      line-height:1.65;
+      opacity:.84;
+    }
+
+    .accent {
+      height:8px;
+      background:var(--green);
+    }
+
+    .body {
+      padding:29px 31px 31px;
+    }
+
+    .notice {
+      margin-bottom:21px;
+      padding:14px 15px;
+      border-radius:10px;
+      background:var(--notice-bg);
+      color:var(--notice-text);
+      font-size:13px;
+      line-height:1.6;
+    }
+
+    label {
+      display:block;
+      margin:15px 0 7px;
+      font-size:12px;
+      font-weight:800;
+    }
+
+    input {
+      width:100%;
+      height:47px;
+      padding:0 13px;
+      border:1px solid var(--border);
+      border-radius:9px;
+      outline:none;
+      font-size:14px;
+    }
+
+    input:focus {
+      border:2px solid var(--navy);
+    }
+
+    button {
+      width:100%;
+      height:47px;
+      margin-top:21px;
+      border:0;
+      border-radius:9px;
+      background:var(--navy);
+      color:#FFFFFF;
+      font-size:14px;
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    button:hover {
+      background:var(--navy-dark);
+    }
+
+    button:disabled {
+      background:#AEB8C7;
+      cursor:wait;
+    }
+
+    .helper {
+      margin-top:13px;
+      color:var(--muted);
+      font-size:11px;
+      line-height:1.6;
+    }
+
+    .message {
+      display:none;
+      margin-top:17px;
+      padding:13px 14px;
+      border-radius:9px;
+      font-size:13px;
+      line-height:1.55;
+      white-space:pre-line;
+    }
+
+    .message.error {
+      display:block;
+      background:var(--error-bg);
+      color:var(--error-text);
+    }
+
+    .message.success {
+      display:block;
+      background:var(--success-bg);
+      color:var(--success-text);
+    }
+
+    .footer {
+      margin-top:19px;
+      padding-top:16px;
+      border-top:1px solid #EDF1F5;
+      color:#8A94A5;
+      font-size:10px;
+      text-align:center;
+    }
+
+    [hidden] {
+      display:none !important;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="card">
+    <header class="header">
+      <h1>계정 비밀번호 설정</h1>
+      <p>
+        현장 통합관리 시스템 초대를 완료하고
+        로그인에 사용할 새 비밀번호를 등록합니다.
+      </p>
+    </header>
+
+    <div class="accent"></div>
+
+    <section class="body">
+      <div
+        id="status"
+        class="notice"
+        role="status"
+        aria-live="polite"
+      >
+        초대 인증정보를 확인하고 있습니다.
+      </div>
+
+      <form id="password-form" hidden>
+        <label for="password">
+          새 비밀번호
+        </label>
+        <input
+          id="password"
+          type="password"
+          minlength="8"
+          autocomplete="new-password"
+          placeholder="8자 이상 입력"
+          required
+        >
+
+        <label for="password-confirm">
+          새 비밀번호 확인
+        </label>
+        <input
+          id="password-confirm"
+          type="password"
+          minlength="8"
+          autocomplete="new-password"
+          placeholder="비밀번호를 한 번 더 입력"
+          required
+        >
+
+        <button
+          id="submit-button"
+          type="submit"
+        >
+          비밀번호 설정 완료
+        </button>
+
+        <div class="helper">
+          설정이 완료되면 이 창을 닫고 데스크톱 프로그램에서
+          초대받은 이메일과 새 비밀번호로 로그인하세요.
+        </div>
+      </form>
+
+      <div
+        id="message"
+        class="message"
+        role="alert"
+        aria-live="assertive"
+      ></div>
+
+      <div class="footer">
+        현장 통합관리 시스템 · 안전한 계정 설정
+      </div>
+    </section>
+  </main>
+
+  <script type="module">
+    import {
+      createClient
+    } from "https://esm.sh/@supabase/supabase-js@2";
+
+    const SUPABASE_URL = "https://ifkuooesdwqqvsqgdvvg.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY =
+      "sb_publishable_Txcjd7n-Wtta5R7tBD6YRg_Bd4dH7lK";
+
+    const supabase = createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY,
+      {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+          detectSessionInUrl: true
+        }
+      }
+    );
+
+    const statusElement =
+      document.getElementById("status");
+    const form =
+      document.getElementById("password-form");
+    const messageElement =
+      document.getElementById("message");
+    const submitButton =
+      document.getElementById("submit-button");
+
+    function showMessage(
+      text,
+      type = "error"
+    ) {
+      messageElement.textContent = text;
+      messageElement.className =
+        "message " + type;
+    }
+
+    function clearMessage() {
+      messageElement.textContent = "";
+      messageElement.className =
+        "message";
+    }
+
+    function cleanAddressBar() {
+      try {
+        history.replaceState(
+          null,
+          document.title,
+          location.pathname
+        );
+      } catch (_) {
+        // 브라우저 환경에 따라 주소 정리가 제한될 수 있습니다.
+      }
+    }
+
+    async function createSessionFromUrl() {
+      const query =
+        new URLSearchParams(location.search);
+      const code = query.get("code");
+
+      if (code) {
+        const {
+          error
+        } = await supabase.auth.exchangeCodeForSession(
+          code
+        );
+
+        if (error) {
+          throw error;
+        }
+
+        cleanAddressBar();
+        return;
+      }
+
+      const hash =
+        new URLSearchParams(
+          location.hash.replace(/^#/, "")
+        );
+
+      const accessToken =
+        hash.get("access_token");
+      const refreshToken =
+        hash.get("refresh_token");
+
+      if (
+        accessToken
+        && refreshToken
+      ) {
+        const {
+          error
+        } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken
+        });
+
+        if (error) {
+          throw error;
+        }
+
+        cleanAddressBar();
+      }
+    }
+
+    async function initialize() {
+      try {
+        await createSessionFromUrl();
+
+        const {
+          data,
+          error
+        } = await supabase.auth.getUser();
+
+        if (
+          error
+          || !data.user
+        ) {
+          throw new Error(
+            "유효한 초대 인증정보를 확인하지 못했습니다.\n"
+            + "초대 이메일의 링크로 다시 접속하거나 "
+            + "관리자에게 초대 재전송을 요청하세요."
+          );
+        }
+
+        const email =
+          data.user.email
+          || "초대 계정";
+
+        statusElement.textContent =
+          email
+          + " 계정의 새 비밀번호를 설정해 주세요.";
+
+        form.hidden = false;
+      } catch (error) {
+        statusElement.textContent =
+          "초대 인증 확인 실패";
+
+        showMessage(
+          error?.message
+          || String(error)
+        );
+      }
+    }
+
+    form.addEventListener(
+      "submit",
+      async (event) => {
+        event.preventDefault();
+        clearMessage();
+
+        const password =
+          document.getElementById(
+            "password"
+          ).value;
+
+        const confirmation =
+          document.getElementById(
+            "password-confirm"
+          ).value;
+
+        if (password.length < 8) {
+          showMessage(
+            "비밀번호는 8자 이상 입력해 주세요."
+          );
+          return;
+        }
+
+        if (
+          password
+          !== confirmation
+        ) {
+          showMessage(
+            "비밀번호 확인 값이 일치하지 않습니다."
+          );
+          return;
+        }
+
+        submitButton.disabled = true;
+        submitButton.textContent =
+          "설정 중...";
+
+        const {
+          error
+        } = await supabase.auth.updateUser({
+          password
+        });
+
+        if (error) {
+          showMessage(
+            error.message
+            || "비밀번호 설정 중 오류가 발생했습니다."
+          );
+
+          submitButton.disabled = false;
+          submitButton.textContent =
+            "비밀번호 설정 완료";
+          return;
+        }
+
+        await supabase.auth.signOut();
+
+        statusElement.textContent =
+          "계정 설정이 완료되었습니다.";
+
+        form.hidden = true;
+
+        showMessage(
+          "이 창을 닫고 현장 통합관리 시스템에서 "
+          + "새 비밀번호로 로그인하세요.",
+          "success"
+        );
+      }
+    );
+
+    initialize();
+  </script>
+</body>
+</html>
